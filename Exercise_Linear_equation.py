@@ -9,6 +9,7 @@ INCLUDE_TEXT_QUESTION = False
 A_RANGE = 10
 X_RANGE = 100
 
+
 def get_variable(v_list):
     return v_list[rnd.randrange(0, len(v_list), 1)]
 
@@ -73,8 +74,8 @@ class LinearEquationBase:
             odin_word = "одной " + str(fruit_name_list[tmp_number][1])
 
         question_string = "На весах с одной стороны лежит " + str(self.a) + " " + str(self.variable) + \
-                           " и гири общей массой " + str(self.b) + " грамм. А на другой чаше весов лежат гири массой " \
-                           + str(self.c) + " грамм. \nКакова масса " + str(odin_word) + "? "
+                          " и гири общей массой " + str(self.b) + " грамм. А на другой чаше весов лежат гири массой " \
+                          + str(self.c) + " грамм. \nКакова масса " + str(odin_word) + "? "
         return question_string
 
     def generate_exercise_scales_and_fruits_console(self):
