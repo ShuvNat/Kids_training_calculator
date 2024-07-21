@@ -1,4 +1,5 @@
 import random as rnd
+import datetime as dt
 
 variable_list = ["x", "y", "z", "t", "m"]
 fruit_name_list = [["яблоко", "яблока", "яблок"], ["груша", "груши", "груш"], ["апельсин", "апельсина", "апельсинов"],
@@ -8,6 +9,7 @@ ONLY_DIVIDE = False
 INCLUDE_TEXT_QUESTION = False
 A_RANGE = 10
 X_RANGE = 100
+SHOW_ANSWERS = True
 
 
 def get_variable(v_list):
@@ -105,7 +107,7 @@ def single_exercise_linear_equation_console(include_text_question=False, just_di
     rnd_text_or_equation = rnd.randrange(0, 2, 1)
     check = 0
     count = 0
-    exercise = LinearEquationBase(just_divide=just_divide, a_range=A_RANGE, x_range=X_RANGE)
+    exercise = LinearEquationBase(just_divide=just_divide, a_range=A_RANGE, x_range=X_RANGE, show_answer=SHOW_ANSWERS)
     while check == 0:
         if include_text_question is True:
             if rnd_text_or_equation == 1:
