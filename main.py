@@ -1,11 +1,11 @@
 import random as rnd
 from datetime import datetime as dt
 from calculator import get_time_result
-from Exercise_Linear_equation import LinearEquationBase
+from Exercise_Linear_equation import LinearEquationBase, ScalesAndFruits
 from FruitPicking import FruitPicking
 
-SHOW_ANSWERS = True
-NUMBER_OF_EXERCISE = 1
+SHOW_ANSWERS = False
+NUMBER_OF_EXERCISE = 20
 ONLY_DIVIDE = False
 INCLUDE_TEXT_QUESTION = True
 
@@ -22,45 +22,64 @@ def word_after_try_number(n):
     return result
 
 
-def give_an_exercise_console(include_text_question=False, just_divide=False, console=True):
-    rnd_text_or_equation = rnd.randrange(0, 3, 1)
-    check = 0
-    count = 0
+class OneTask:
+    def __init__(self, include_text_question=False, just_divide=False, console=True, show_answers=SHOW_ANSWERS):
+        self.show_answers = show_answers
+        self.include_text_question = include_text_question
+        self.just_divide = just_divide
+        self.console = console
+        self.check = 0
+        self.try_count = 0
+        self.task_type = rnd.randrange(0, 3, 1)
+        self.task = self.create_task()
+        self.question_text = self.task_question()
 
-    if include_text_question is True:
-        if rnd_text_or_equation == 1:
-            exercise = LinearEquationBase(just_divide=just_divide, show_answer=SHOW_ANSWERS)
-            question_text = exercise.generate_exercise_scales_and_fruits_string()
-        elif rnd_text_or_equation == 0:
-            exercise = LinearEquationBase(just_divide=just_divide, show_answer=SHOW_ANSWERS)
-            question_text = exercise.generate_exercise_linear_equation_single()
+    def create_task(self):
+        if self.include_text_question is True:
+            if self.task_type == 0:
+                self.task = ScalesAndFruits()
+
+            elif self.task_type == 1:
+                self.task = FruitPicking()
+
+            else:
+                self.task = LinearEquationBase(just_divide=self.just_divide)
+
         else:
-            exercise = FruitPicking(show_answer=SHOW_ANSWERS)
-            question_text = exercise.generate_question_string()
+            self.task = LinearEquationBase(just_divide=self.just_divide)
+        return self.task
 
-    else:
-        exercise = LinearEquationBase(just_divide=just_divide, show_answer=SHOW_ANSWERS)
-        question_text = exercise.generate_exercise_linear_equation_single()
+    def task_question(self):
+        question_text = self.task.generate_question_string()
 
-    while check == 0:
-        print(question_text)
-        exercise.get_answer_console()
-        check = exercise.check_answer()
-        count = count + 1
-        if console is True:
+        if self.show_answers is True:
+            question_text = question_text + " Ответ: " + str(self.task.right_answer)
+
+        return question_text
+
+    def give_an_exercise_console(self):
+        check = 0
+        while check == 0:
+            print(self.question_text)
+            self.task.get_answer_console()
+            check = self.task.check_answer()
+            self.try_count = self.try_count + 1
             if check == 0:
                 print("Ошибка, проверь еще раз.")
                 print("\n")
             else:
                 print("Правильно! Ура!")
                 print("\n")
-
-    return count
+        return self.try_count
 
 
 class ExerciseCheck:
-    def __init__(self, number):
+    def __init__(self, number=NUMBER_OF_EXERCISE, cfg_file=None):
         self.questions_max_count = number
+        self.show_answers = SHOW_ANSWERS
+
+        if cfg_file is not None:
+            self.get_cfg_from_file(cfg_file)
         self.questions_count = 0
         self.try_count = 0
         self.question_count = 0
@@ -68,11 +87,11 @@ class ExerciseCheck:
         self.start_time = dt.now()
         self.end_time = dt.now()
 
-    def doing_exercise_console(self, include_text_questions=False, only_divide=False):
+    def doing_exercise_console(self):
         while self.questions_count < self.questions_max_count:
             print("Пример №" + str(self.questions_count + 1))
-            trys = give_an_exercise_console(include_text_question=include_text_questions,
-                                            just_divide=only_divide)
+            trys = OneTask(include_text_question=INCLUDE_TEXT_QUESTION, just_divide=ONLY_DIVIDE,
+                           show_answers=self.show_answers).give_an_exercise_console()
             self.answers_row.append([self.questions_count + 1, trys])
             self.try_count = self.try_count + trys
             self.questions_count = self.questions_count + 1
@@ -86,8 +105,28 @@ class ExerciseCheck:
 
         return 0
 
+    def get_cfg_from_file(self, cfg_filename):
+
+        try:
+            file = open(cfg_filename, "r")
+
+            for line in file:
+                fields = line.strip().split()
+                if fields[0] in "Number":
+                    number = fields[1]
+                    self.questions_max_count = int(number)
+                if fields[0] in "Answers":
+                    if fields[1] in "True":
+                        self.show_answers = True
+                    else:
+                        self.show_answers = False
+        except IOError:
+            self.questions_max_count = NUMBER_OF_EXERCISE
+            self.show_answers = SHOW_ANSWERS
+
 
 if __name__ == '__main__':
-    ExerciseCheck(NUMBER_OF_EXERCISE).doing_exercise_console(include_text_questions=INCLUDE_TEXT_QUESTION,
-                                                             only_divide=ONLY_DIVIDE)
+
+    filename = "config1.cfg"
+    ExerciseCheck(cfg_file=filename).doing_exercise_console()
 

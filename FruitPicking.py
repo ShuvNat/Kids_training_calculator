@@ -23,7 +23,7 @@ class FruitPicking(BaseTask):
         self.right_answer = self.summ
         self.show_answer_marker = show_answer
 
-    def generate_question_string(self):
+    def generate_question_string(self, show_answer_marker=False):
 
         if self.less_or_more_index == 0:
             less_more = "меньше"
@@ -37,7 +37,7 @@ class FruitPicking(BaseTask):
                       str(self.summ - (2 * self.x)) + " " + less_more1 + " " + self.name[2] + " чем во второй. Сколько " \
                       + self.name[2] + " собрали за оба дня?"
 
-        if self.show_answer_marker is True:
+        if show_answer_marker is True:
             base_string = base_string + " " + str(self.right_answer)
 
         return base_string

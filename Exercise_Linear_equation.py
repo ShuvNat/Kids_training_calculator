@@ -53,9 +53,22 @@ class LinearEquationBase(BaseTask):
         if self.b == 0:
             string = str(self.a) + "*" + str(variable) + " = " + str(self.c)
 
+        string = string + '\nЧему равно ' + str(self.variable) + "?"
         return string
 
-    def generate_exercise_scales_and_fruits_string(self):
+    def generate_question_string(self, show_answer_marker=False):
+        question_string = self.generate_question_string_base(self.variable)
+        if show_answer_marker is True:
+            question_string = question_string + " " + str(self.right_answer)
+        return question_string
+
+
+class ScalesAndFruits(LinearEquationBase):
+
+    def __init__(self, show_answer=SHOW_ANSWERS):
+        super().__init__(show_answer=show_answer)
+
+    def generate_question_string(self, show_answer_marker=False):
         tmp_number = rnd.randrange(0, len(fruit_name_list), 1)
         if self.a == 1:
             self.variable = fruit_name_list[tmp_number][0]
@@ -68,6 +81,7 @@ class LinearEquationBase(BaseTask):
         self.multiply = self.a * self.x
         self.b = int(rnd.randrange(0, 1000, 10))
         self.c = self.multiply + self.b
+        self.right_answer = self.x
 
         if tmp_number in [0, 2, 4]:
             odin_word = "одного " + str(fruit_name_list[tmp_number][1])
@@ -79,21 +93,8 @@ class LinearEquationBase(BaseTask):
         question_string = "На весах с одной стороны лежит " + str(self.a) + " " + str(self.variable) + \
                           " и гири общей массой " + str(self.b) + " грамм. А на другой чаше весов лежат гири массой " \
                           + str(self.c) + " грамм. \nКакова масса " + str(odin_word) + "? "
-        if self.show_answer_marker is True:
+        if show_answer_marker is True:
             question_string = question_string + str(self.right_answer)
 
         return question_string
-
-    def generate_question_string(self):
-        return self.generate_question_string_base(self.variable)
-
-    def generate_exercise_linear_equation_single(self):
-        if self.show_answer_marker is True:
-            print(self.x)
-        print(self.generate_question_string())
-        question_string = "Чему равно " + str(self.variable) + "?"
-        return question_string
-
-
-
 
