@@ -144,7 +144,7 @@ def get_time_result(time):
     seconds = time.seconds % 60
     inf_min = infinite(minutes)
     inf_sec = infinite(seconds)
-    result_time = f'{minutes} минут{inf_min} {seconds} секнуд{inf_sec}\n'
+    result_time = f'{minutes} минут{inf_min} {seconds} секунд{inf_sec}\n'
     return result_time
 
 

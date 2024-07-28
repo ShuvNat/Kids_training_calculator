@@ -10,6 +10,18 @@ ONLY_DIVIDE = False
 INCLUDE_TEXT_QUESTION = True
 
 
+def word_after_try_number(n):
+    if n in (11, 12, 13, 14):
+        result = 'попыток'
+    elif n % 10 == 1:
+        result = 'попытка'
+    elif n % 10 in (2, 3, 4):
+        result = 'попытки'
+    else:
+        result = 'попыток'
+    return result
+
+
 def give_an_exercise_console(include_text_question=False, just_divide=False, console=True):
     rnd_text_or_equation = rnd.randrange(0, 3, 1)
     check = 0
@@ -18,19 +30,20 @@ def give_an_exercise_console(include_text_question=False, just_divide=False, con
     if include_text_question is True:
         if rnd_text_or_equation == 1:
             exercise = LinearEquationBase(just_divide=just_divide, show_answer=SHOW_ANSWERS)
-            print(exercise.generate_exercise_scales_and_fruits_string())
+            question_text = exercise.generate_exercise_scales_and_fruits_string()
         elif rnd_text_or_equation == 0:
             exercise = LinearEquationBase(just_divide=just_divide, show_answer=SHOW_ANSWERS)
-            print(exercise.generate_exercise_linear_equation_single())
+            question_text = exercise.generate_exercise_linear_equation_single()
         else:
             exercise = FruitPicking(show_answer=SHOW_ANSWERS)
-            print(exercise.generate_question_string())
+            question_text = exercise.generate_question_string()
 
     else:
         exercise = LinearEquationBase(just_divide=just_divide, show_answer=SHOW_ANSWERS)
-        print(exercise.generate_exercise_linear_equation_single())
+        question_text = exercise.generate_exercise_linear_equation_single()
 
     while check == 0:
+        print(question_text)
         exercise.get_answer_console()
         check = exercise.check_answer()
         count = count + 1
@@ -64,7 +77,8 @@ class ExerciseCheck:
             self.try_count = self.try_count + trys
             self.questions_count = self.questions_count + 1
 
-        print("Решено: " + str(self.questions_max_count) + " примеров. Всего ушло: " + str(self.try_count) + " попыток")
+        print("Решено: " + str(self.questions_max_count) + " примеров. Всего ушло: " + str(self.try_count) + " " +
+              str(word_after_try_number(self.try_count)))
         print(self.answers_row)
         self.end_time = dt.now()
         print(f'Сегодня твое время {get_time_result(self.end_time - self.start_time)}')
@@ -76,3 +90,4 @@ class ExerciseCheck:
 if __name__ == '__main__':
     ExerciseCheck(NUMBER_OF_EXERCISE).doing_exercise_console(include_text_questions=INCLUDE_TEXT_QUESTION,
                                                              only_divide=ONLY_DIVIDE)
+
