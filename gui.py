@@ -96,7 +96,10 @@ class MainWindow(QMainWindow, Exercise):
             if self.task_number > self.number_of_tasks:
                 self.button.setText('Посмотреть результат')
             else:
-                self.button.setText('Следующий пример')
+                if self.is_simple is True:
+                    self.button.setText('Следующий пример')
+                else:
+                    self.button.setText('Следующая задача')
             self.button.setDefault(True)
             self.button.clicked.disconnect()
             self.button.clicked.connect(self.execute_in_gui)
