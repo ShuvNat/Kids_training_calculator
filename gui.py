@@ -105,6 +105,14 @@ class MainWindow(QMainWindow, Exercise):
             self.button.clicked.connect(self.execute_in_gui)
             self.button.setFocus()
 
+    def closeEvent(self, event):
+        if self.task_number <= self.number_of_tasks:
+            self.end_time = datetime.now()
+            time = self.end_time - self.start_time
+            result_time = self.get_time_result(time)
+            self.logging(self.mistake_couter, result_time)
+        event.accept()
+
 
 app = QApplication(sys.argv)
 window = MainWindow()

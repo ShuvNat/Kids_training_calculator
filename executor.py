@@ -79,7 +79,7 @@ class Exercise:
         locale.setlocale(locale.LC_ALL, '')
         date = datetime.now().strftime('%d.%m.%Y, %A')
         file.write(f'{date}\n')
-        file.write(f'Решено {self.number_of_tasks} {self.nouns_declension(self.task_name, self. number_of_tasks)}. ')
+        file.write(f'Решено {self.task_number-1} {self.nouns_declension(self.task_name, self. number_of_tasks)}. ')
         file.write(f'Время решения: {result_time}')
         file.write(f'Ошибок: {str(sum(result.values()))}\n\n')
         file.close()
