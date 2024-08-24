@@ -161,6 +161,11 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+#nuitka
+gui.build/
+gui.dist/
+gui.onefile-build/
+
 *.bat
 *.ico
 *.txt

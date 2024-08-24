@@ -106,7 +106,7 @@ class MainWindow(QMainWindow, Exercise):
             self.button.setFocus()
 
     def closeEvent(self, event):
-        if self.task_number <= self.number_of_tasks:
+        if self.task_number <= self.number_of_tasks and self.task_number != 1:
             self.end_time = datetime.now()
             time = self.end_time - self.start_time
             result_time = self.get_time_result(time)
