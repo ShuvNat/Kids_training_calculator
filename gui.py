@@ -1,6 +1,6 @@
 from datetime import datetime
 import sys
-from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QLineEdit, QMainWindow, QPushButton, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QLineEdit, QMainWindow, QMessageBox, QPushButton, QVBoxLayout, QWidget
 from executor import Exercise
 
 config_filename = 'config.cfg'
@@ -24,7 +24,7 @@ class MainWindow(QMainWindow, Exercise):
         layout1 = QVBoxLayout()
         layout2 = QHBoxLayout()
 
-        self.task_label = QLabel(f'Реши {self.nouns_declension(self.task_name, 1)} номер {self.task_number}')
+        self.task_label = QLabel(f'Реши {self.nouns_declension(self.task_name, 1)} номер {self.task_number+1}')
         self.question_label = QLabel('')
         self.answer_input = QLineEdit()
         self.answer_input.returnPressed.connect(self.check_answer_gui)
@@ -54,19 +54,18 @@ class MainWindow(QMainWindow, Exercise):
         self.execute_in_gui()
 
     def execute_in_gui(self):
-        if self.task_number > self.number_of_tasks:
+        if self.task_number >= self.number_of_tasks:
             self.end_time = datetime.now()
             time = self.end_time - self.start_time
             result_time = self.get_time_result(time)
             self.check_label.setText(f'Время решения: {result_time}Количество ошибок {sum(self.mistake_couter.values())}')
             self.count_douwn_label.setText('')
-            self.logging(self.mistake_couter, result_time)
             self.answer_input.returnPressed.disconnect()
             self.button.setEnabled(False)
             return
 
         self.current_task = self.get_task()
-        self.task_label.setText(f'Реши {self.nouns_declension(self.task_name, 1)} номер {self.task_number}')
+        self.task_label.setText(f'Реши {self.nouns_declension(self.task_name, 1)} номер {self.task_number+1}')
         if self.show_answer is True:
             self.question_label.setText(f'{self.current_task.question} {self.current_task.answer}')
         else:
@@ -86,14 +85,14 @@ class MainWindow(QMainWindow, Exercise):
             self.answer_input.clear()
             self.check_label.setText('Неправильно. Попробуй еще раз.')
         else:
-            remain = self.number_of_tasks - self.task_number
+            remain = self.number_of_tasks - self.task_number - 1
             self.check_label.setText('Правильно! Молодец!')
             self.count_douwn_label.setText(f'Осталось решить {remain} {self.nouns_declension(self.task_name, remain)}')
             if self.try_counter != 0:
-                self.mistake_couter[self.task_number] = self.mistake_couter.get(self.task_number, 0) + self.try_counter
+                self.mistake_couter[self.task_number+1] = self.mistake_couter.get(self.task_number+1, 0) + self.try_counter
             self.task_number += 1
             self.try_counter = 0
-            if self.task_number > self.number_of_tasks:
+            if self.task_number >= self.number_of_tasks:
                 self.button.setText('Посмотреть результат')
             else:
                 if self.is_simple is True:
@@ -106,12 +105,24 @@ class MainWindow(QMainWindow, Exercise):
             self.button.setFocus()
 
     def closeEvent(self, event):
-        if self.task_number <= self.number_of_tasks and self.task_number != 1:
-            self.end_time = datetime.now()
-            time = self.end_time - self.start_time
-            result_time = self.get_time_result(time)
-            self.logging(self.mistake_couter, result_time)
-        event.accept()
+        dlg = QMessageBox(self)
+        dlg.setWindowTitle("Внимание!")
+        dlg.setText("Вы уверены, что хотите закрыть это окно?")
+        dlg.addButton("Да", QMessageBox.ButtonRole.YesRole)
+        no_btn = dlg.addButton("Нет", QMessageBox.ButtonRole.NoRole)
+        dlg.setIcon(QMessageBox.Icon.Question)
+        dlg.exec()
+        if dlg.clickedButton() == no_btn:
+            event.ignore()
+        else:
+            if self.task_number != 0:
+                self.end_time = datetime.now()
+                time = self.end_time - self.start_time
+                result_time = self.get_time_result(time)
+                self.logging(self.mistake_couter, result_time)
+            event.accept()
+
+
 
 
 app = QApplication(sys.argv)

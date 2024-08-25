@@ -3,8 +3,8 @@ import locale
 from advancedmath import AdvancedTasks
 from simplemath import SimpleTasks
 
-NUMBER_OF_TASKS = 20
-SHOW_ANSWER = False
+NUMBER_OF_TASKS = 5
+SHOW_ANSWER = True
 IS_SIMPLE = False
 WORDS_LIST = [['пример', 'примера', 'примеров'],
               ['задачу', 'задачи', 'задач'],
@@ -17,7 +17,7 @@ class Exercise:
     def __init__(self, show_answer=SHOW_ANSWER, is_simple=IS_SIMPLE, cfg_file=None):
 
         self.number_of_tasks = NUMBER_OF_TASKS
-        self.task_number = 1
+        self.task_number = 0
         self.current_task = None
         self.start_time = None
         self.end_time = None
@@ -77,9 +77,9 @@ class Exercise:
     def logging(self, result, result_time):
         file = open('Математический тренажер, статистика.txt', 'a')
         locale.setlocale(locale.LC_ALL, '')
-        date = datetime.now().strftime('%d.%m.%Y, %A')
+        date = datetime.now().strftime('%d.%m.%Y, %A, %H:%M')
         file.write(f'{date}\n')
-        file.write(f'Решено {self.task_number-1} {self.nouns_declension(self.task_name, self. number_of_tasks)}. ')
+        file.write(f'Решено {self.task_number} {self.nouns_declension(self.task_name, self. number_of_tasks)}. ')
         file.write(f'Время решения: {result_time}')
         file.write(f'Ошибок: {str(sum(result.values()))}\n\n')
         file.close()
@@ -88,7 +88,7 @@ class Exercise:
         self.start_time = datetime.now()
         for i in range(self.number_of_tasks):
             self.current_task = self.get_task()
-            print(f'Реши {self.nouns_declension(self.task_name, 1)} номер {self.task_number}')
+            print(f'Реши {self.nouns_declension(self.task_name, 1)} номер {self.task_number+1}')
             if self.show_answer is True:
                 answer = input(f'{self.current_task.question} {self.current_task.answer}')
             else:
@@ -97,12 +97,12 @@ class Exercise:
                 print()
                 print('Неправильно, попробуй еще раз')
                 answer = input(self.current_task.question)
-            remain = self.number_of_tasks - self.task_number
+            remain = self.number_of_tasks - self.task_number - 1
             print('Правильно! Молодец!')
             print(f'Осталось решить {remain} {self.nouns_declension(self.task_name, remain)}')
             print()
             if self.try_counter != 0:
-                self.mistake_couter[self.task_number] = self.mistake_couter.get(self.task_number, 0) + self.try_counter
+                self.mistake_couter[self.task_number+1] = self.mistake_couter.get(self.task_number+1, 0) + self.try_counter
             self.task_number += 1
             self.try_counter = 0
         self.end_time = datetime.now()
