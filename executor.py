@@ -3,8 +3,8 @@ import locale
 from advancedmath import AdvancedTasks
 from simplemath import SimpleTasks
 
-NUMBER_OF_TASKS = 5
-SHOW_ANSWER = True
+NUMBER_OF_TASKS = 20
+SHOW_ANSWER = False
 IS_SIMPLE = False
 WORDS_LIST = [['пример', 'примера', 'примеров'],
               ['задачу', 'задачи', 'задач'],

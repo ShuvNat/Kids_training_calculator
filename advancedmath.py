@@ -44,7 +44,7 @@ class AdvancedTasks:
 
     def fruit_picking(self,):
 
-        x = randint(0, 100)
+        x = randint(3, 100)
         a = randint(2, 15)
         less_or_more_index = randint(0, 2)
         self.answer = x + a * x
